@@ -1,10 +1,24 @@
+import random
+
 def jogar():
     print("================================")
     print("===Bem-vindo ao Jogo da Forca===")
     print("================================")
 
-    palavra_secreta = "banana".upper()
-    letras_acertadas = ["_","_","_","_","_","_"]
+    arquivo = open("palavras.txt", "r")
+    palavras = []
+
+    for linha in arquivo:
+        linha = linha.strip().upper()
+        palavras.append(linha)
+
+    arquivo.close()
+
+    numero = random.randrange(0, len(palavras))
+    palavra_secreta = palavras[numero]
+
+    # palavra_secreta = "banana".upper()
+    letras_acertadas = ["_" for letra in palavra_secreta]  # List Comprehension
 
     enforcou = False
     acertou = False
@@ -14,26 +28,28 @@ def jogar():
     while(not enforcou and not acertou):
 
         chute = input("Digite uma letra: ")
-        chute = chute.strip().upper() # estamos tratando a variável para limpar espaços em branco
+        # estamos tratando a variável para limpar espaços em branco
+        chute = chute.strip().upper()
 
         if(chute in palavra_secreta):
             index = 0
             for letra in palavra_secreta:
-                if(chute == letra): # aqui compartamos a entrada sempre como se fosse letra maíuscula
-                    letras_acertadas[index] = letra # aqui guardamos as letras existentes na lista
+                if(chute == letra):  # aqui compartamos a entrada sempre como se fosse letra maíuscula
+                    # aqui guardamos as letras existentes na lista
+                    letras_acertadas[index] = letra
                 index += 1
         else:
             erros += 1
-        
+
         print(letras_acertadas)
 
-        enforcou = erros == 6
-        acertou = "_" not in letras_acertadas
-
-        if(acertou):
+        if("_" not in letras_acertadas):
             print("Parabéns, você ganhou!")
-        else:
+            break
+        elif(erros == 6):
             print("Não foi desta vez!")
+        else:
+            continue
 
     print("Fim do jogo!")
 
